@@ -37,12 +37,12 @@ function VideoDetailPage(props) {
                             />
                         </List.Item>
                         {/* Comment list*/}
-                        <Comment />
+                        
+                        <Comment postId={videoId} />
                     </div>
                 </Col>
                 <Col lg={6} xs={24}>
                     <SideVideo />
-                    여기는 보이나요 ?
                 </Col>
             </Row>
         );
