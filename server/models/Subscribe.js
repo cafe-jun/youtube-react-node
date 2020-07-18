@@ -18,3 +18,4 @@ const subscribeSchma = mongoose.Schema(
 const Subscribe = mongoose.model("Subscribe", subscribeSchma);
 
 module.exports = { Subscribe };
+
