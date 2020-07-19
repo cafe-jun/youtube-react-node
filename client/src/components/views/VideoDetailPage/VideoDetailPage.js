@@ -8,8 +8,8 @@ import Axios from 'axios';
 function VideoDetailPage(props) {
     const videoId = props.match.params.videoId;
     const [VideoDetail, setVideoDetail] = useState([]);
+    const [Comments, setComments] = useState([]);
     const videoVariable = { videoId: videoId };
-
     useEffect(() => {
         Axios.post('/api/video/getVideoDetail', videoVariable).then((response) => {
             if (response.data.success) {
@@ -19,7 +19,19 @@ function VideoDetailPage(props) {
                 alert('비디오 정보를 가져오는데 실패했습니다.');
             }
         });
+
+        Axios.post('/api/comment/getComments', videoVariable).then((response) => {
+            if (response.data.success) {
+                console.log(response.data.success);
+                setComments(response.data.comments);
+            } else {
+                alert('비디오 정보를 가져오는데 실패했습니다.');
+            }
+        });
     }, []);
+    const refreshFunction = (newComment) => {
+        setComments(Comments.concat(newComment));
+    };
     if (VideoDetail.writer) {
         const subscribeButton = VideoDetail.writer._id !== localStorage.getItem('userId') && (
             <Subscribe userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')} />
@@ -37,8 +49,8 @@ function VideoDetailPage(props) {
                             />
                         </List.Item>
                         {/* Comment list*/}
-                        
-                        <Comment postId={videoId} />
+
+                        <Comment refreshFunction={refreshFunction} commentList={Comments} postId={videoId} />
                     </div>
                 </Col>
                 <Col lg={6} xs={24}>

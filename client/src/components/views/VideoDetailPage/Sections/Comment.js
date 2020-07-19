@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import Axios from 'axios';
 import { useSelector } from 'react-redux';
 import SingleComment from './SingleComment';
+import ReplyComment from './ReplyComment';
 
 function Comment(props) {
     const videoId = props.postId;
     const user = useSelector((state) => state.user);
     const [commentValue, setCommentValue] = useState('');
+
     const handleClick = (event) => {
         setCommentValue(event.currentTarget.value);
     };
@@ -22,6 +24,8 @@ function Comment(props) {
         Axios.post('/api/comment/saveComment', variables).then((response) => {
             if (response.data.success) {
                 console.log(response.data.result);
+                setCommentValue('');
+                props.refreshFunction(response.data.result);
             } else {
                 alert('Comment 를 저장하지 못했습니다. ');
             }
@@ -33,7 +37,16 @@ function Comment(props) {
             <p> Reples</p>
             <hr />
             {/* Comment List */}
-            <SingleComment />
+            {props.commentList &&
+                props.commentList.map(
+                    (comment, index) =>
+                        !comment.responseTo && (
+                            <React.Fragment>
+                                <SingleComment refreshFunction={props.refreshFunction} comment={comment} postId={videoId} key={index} />
+                                <ReplyComment parentCommentId={comment._id} commentLists={props.commentList} postId={videoId} />
+                            </React.Fragment>
+                        ),
+                )}
             {/* Root Comment Form */}
             <form style={{ display: 'flex' }} onSubmit={onSubmit}>
                 <textarea
