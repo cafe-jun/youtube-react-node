@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createFactory } from 'react';
 import { Row, Col, List, Avatar, Input } from 'antd';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
@@ -10,6 +10,7 @@ function VideoDetailPage(props) {
     const [VideoDetail, setVideoDetail] = useState([]);
     const [Comments, setComments] = useState([]);
     const videoVariable = { videoId: videoId };
+
     useEffect(() => {
         Axios.post('/api/video/getVideoDetail', videoVariable).then((response) => {
             if (response.data.success) {
@@ -49,8 +50,7 @@ function VideoDetailPage(props) {
                             />
                         </List.Item>
                         {/* Comment list*/}
-
-                        <Comment refreshFunction={refreshFunction} commentList={Comments} postId={videoId} />
+                        <Comment refreshFunction={refreshFunction} commentLists={Comments} postId={videoId} />
                     </div>
                 </Col>
                 <Col lg={6} xs={24}>
